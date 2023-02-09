@@ -1,11 +1,12 @@
 package com.tomgilbert.core.network
 
+import com.tomgilbert.core.network.retrofit.BasicAuthInterceptor
+import com.tomgilbert.core.network.retrofit.RetrofitAuthorizationProvider
 import com.tomgilbert.core.network.retrofit.RetrofitBeRealTaskNetwork
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import retrofit2.HttpException
@@ -15,6 +16,7 @@ import retrofit2.HttpException
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltAndroidTest
 class LiveNetworkInstrumentedTest {
 
@@ -24,26 +26,30 @@ class LiveNetworkInstrumentedTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
+    private val authInterceptor = BasicAuthInterceptor(RetrofitAuthorizationProvider())
+
     @Test(expected = HttpException::class)
     fun getUserDataExpectAuthFailure(): Unit = runBlocking {
-        val test = RetrofitBeRealTaskNetwork()
+        val test = RetrofitBeRealTaskNetwork(authInterceptor)
         test.getUserData("fred", "no")
     }
 
-    @Test
-    fun getUserDataExpectSuccess(): Unit = runBlocking {
-        val test = RetrofitBeRealTaskNetwork()
-        val result = test.getUserData(userName, password)
-        assertEquals(result.firstName, "Noel")
-    }
-
-    @Test
-    fun getRootFolderContents(): Unit = runTest {
-        val test = RetrofitBeRealTaskNetwork()
-        val userData = test.getUserData(userName, password)
-        assertEquals(userData.firstName, "Noel")
-
-        val contents = test.getFolderContents(userData.rootItem.id)
-        assertEquals(true, contents.isNotEmpty())
-    }
+    // The following two tests require valid user credentials in userName, password
+    //  to succeed.
+//    @Test
+//    fun getUserDataExpectSuccess(): Unit = runBlocking {
+//        val test = RetrofitBeRealTaskNetwork(authInterceptor)
+//        val result = test.getUserData(userName, password)
+//        assertEquals(result.firstName, "Noel")
+//    }
+//
+//    @Test
+//    fun getRootFolderContents(): Unit = runTest {
+//        val test = RetrofitBeRealTaskNetwork(authInterceptor)
+//        val userData = test.getUserData(userName, password)
+//        assertEquals(userData.firstName, "Noel")
+//
+//        val contents = test.getFolderContents(userData.rootItem.id)
+//        assertEquals(true, contents.isNotEmpty())
+//    }
 }

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">BeReal Task</string>
+    <string name="image_description">Image</string>
+    <string name="file_description">File</string>
+    <string name="folder_description">Folder</string>
+    <string name="loading">Loading…</string>
+    <string name="empty">Empty</string>
+    <string name="modified_at">Modified %1s</string>
+    <string name="error_with_info">Error %1s</string>
+    <string name="login_failed">Failed to login</string>
+    <string name="please_login">Please login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+</resources>

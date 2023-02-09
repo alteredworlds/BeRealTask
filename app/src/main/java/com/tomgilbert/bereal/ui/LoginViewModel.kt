@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.tomgilbert.core.data.repository.UserDataRepository
 import com.tomgilbert.core.model.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -23,7 +22,6 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = LoginScreenUiState.Loading
             _uiState.value = try {
-                delay(1000L)
                 LoginScreenUiState.Success(userDataRepository.getUserData(username, password))
             } catch (e: Throwable) {
                 LoginScreenUiState.Error(e)
